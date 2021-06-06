@@ -21,6 +21,7 @@ Generate a competition ladder with a defined name and set of pre-defined players
 ```python
 Spring_Ladder = Ladder("Spring League Competition",[Ethan,Flora,Chris,Caroline])
 ```
+The ordering of players here is defined randonmly.
 
 Add matches:
 ```python
