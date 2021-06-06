@@ -23,10 +23,15 @@ Spring_Ladder = Ladder("Spring League Competition",[Ethan,Flora,Chris,Caroline])
 ```
 The ordering of players here is defined randonmly.
 
-Add matches:
+Adding results to the ladder is achieved using the `AddMatch` function:
 ```python
-Spring_Ladder.AddMatch(flora,chris,"1st June 2021",((6,4),(7,6)))
-Spring_Ladder.AddMatch(ethan,caz,"3rd June 2021",((6,3),(6,2)))
+Spring_Ladder.AddMatch( Winner, Loser, Date, Score)
+```
+where the `Winner` and `Loser` parameters are the player objects, and the score is a nested tuple of sets and games.
+Example:
+```python
+Spring_Ladder.AddMatch(Flora, Chris,"1st June 2021",((6,4),(7,6)))
+Spring_Ladder.AddMatch(Ethan, Caroline,"3rd June 2021",((6,3),(6,2)))
 ```
 
 Print the ladder order:
