@@ -17,6 +17,17 @@ class Player:
             "games won"     :  0,
             "games lost"    :  0
         }
+        self.ladder_stats = {
+            "highest position": None,
+            "lowest position" : None,
+            "current position": None
+        }
+
+    def AlterPosition(self,new_position):
+        self.position = new_position
+        self.position_history.append(new_position)
+        self.ComputeLadderStats()
+
 
     def UpdateStats(self,yours,theirs):
         self.stats["matches won"]   +=  yours[0]
@@ -25,6 +36,17 @@ class Player:
         self.stats["sets lost"]     +=  theirs[1]
         self.stats["games won"]     +=  yours[2]
         self.stats["games lost"]    +=  theirs[2] 
+
+    def PrintStats(self):
+        print(self.stats)
+
+    def UpdateMatchHistory(self,match):
+        self.match_history.append(match)
+
+    def ComputeLadderStats(self):
+        self.ladder_stats["highest position"] = min(self.position_history)
+        self.ladder_stats["lowest position"]  = max(self.position_history)
+        self.ladder_stats["current position"] = self.position
 
 
 class Match:
@@ -56,7 +78,9 @@ class Match:
 class Ladder:
 
     def SetPlayerPositions(self):
-        for (pos,player) in enumerate(self.ladder): player.position = pos
+        for (pos,player) in enumerate(self.ladder): 
+            player.AlterPosition(pos)
+            # player.position = pos
 
     def __init__(self,tournament_name,list_of_initial_participants):
         self.tournament_name = tournament_name
@@ -76,6 +100,8 @@ class Ladder:
         match = Match(winner,loser,date,score)
         self.list_of_matches.append(match)
         self.UpdateLadder(match.winner,match.loser)
+        winner.UpdateMatchHistory(match)
+        loser.UpdateMatchHistory(match)
 
     def UpdateLadder(self,winner,loser):
         loser_old_position, winner_old_position = loser.position , winner.position
@@ -83,22 +109,48 @@ class Ladder:
             above  = self.ladder[:loser_old_position]
             remain = [player for player in self.ladder[loser_old_position:] if player not in [winner,loser]]
             self.ladder = [*above,*[winner],*[loser],*remain]
+            self.SetPlayerPositions()
+        elif winner_old_position < loser_old_position:
+            self.SetPlayerPositions()
+
+    def Compute_Ladder_Statistics(self):
+        self.ladder_statistics = {}
+
+        most_matches_won = max([player.stats["matches won"] for player in self.list_of_participants])
+        self.ladder_statistics["Most Matches Won"] = [player for player in self.list_of_participants if player.stats["matches won"]==most_matches_won]
+
+        least_matches_won = min([player.stats["matches won"] for player in self.list_of_participants])
+        self.ladder_statistics["Least Matches Won"] = [player for player in self.list_of_participants if player.stats["matches won"]==least_matches_won]
+
+        most_sets_won = max([player.stats["sets won"] for player in self.list_of_participants])
+        self.ladder_statistics["Most Sets Won"] = [player for player in self.list_of_participants if player.stats["sets won"]==most_sets_won]
+
+        least_sets_won = min([player.stats["sets won"] for player in self.list_of_participants])
+        self.ladder_statistics["Least Sets Won"] = [player for player in self.list_of_participants if player.stats["sets won"]==least_sets_won]
+
+        most_games_won = max([player.stats["games won"] for player in self.list_of_participants])
+        self.ladder_statistics["Most Games Won"] = [player for player in self.list_of_participants if player.stats["games won"]==most_games_won]
+
+        least_games_won = min([player.stats["games won"] for player in self.list_of_participants])
+        self.ladder_statistics["Least Games Won"] = [player for player in self.list_of_participants if player.stats["games won"]==least_games_won]
+
+        self.ladder_statistics["Leader"] = [self.ladder[0] ]
 
 
-ethan=Player("Ethan")
-caz = Player("Caz")
-mads = Player("Mads")
-chris = Player("Chris")
-flora = Player("Flora")
+        # Print this information
+        '''
+        Little piece of syntactic magic to print elements on the same line
+        '''
+        print("LADDER STATISTICS")
+        for stat in self.ladder_statistics:
+            print("\n")
+            print(stat+":")
+            size = len(self.ladder_statistics[stat])-1
+            for i,p in enumerate(self.ladder_statistics[stat]):
+                if i != size: print(p.name,end=", ",flush=True)
+                else: print(p.name)
 
-Lad = Ladder("Competition",[ethan,caz,flora,chris,mads])
 
 
-Lad.ShowLadder()
 
-Lad.AddMatch(flora,chris,"today",((6,4),(7,6)))
-
-Lad.ShowLadder()
-
-print(chris.stats)
 
