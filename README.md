@@ -19,7 +19,18 @@ Flora     = Player("Flora")
 Generate a competition ladder with a defined name and set of pre-defined players:
 
 ```python
-Spring_League = Ladder("Spring League Competition",[Ethan,Flora,Chris,Caroline])
+Spring_Ladder = Ladder("Spring League Competition",[Ethan,Flora,Chris,Caroline])
+```
+
+Add matches:
+```python
+Spring_Ladder.AddMatch(flora,chris,"1st June 2021",((6,4),(7,6)))
+Spring_Ladder.AddMatch(ethan,caz,"3rd June 2021",((6,3),(6,2)))
+```
+
+Print the ladder order:
+```python
+Spring_Ladder.ShowLadder()
 ```
 
 
