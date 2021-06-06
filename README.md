@@ -9,7 +9,7 @@ Player statistics are also stored, including number of games, sets and matches w
 ## Example
 
 Initialise a set of players:
-```
+```python
 Ethan     = Player("Ethan")
 Caroline  = Player("Caz")
 Chris     = Player("Chris")
